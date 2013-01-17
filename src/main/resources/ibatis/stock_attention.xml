@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="stockAttentionDAO">
+	<typeAlias alias="StockAttentionDO"
+		type="com.jiangjianan.stock.server.object.StockAttentionDO" />
+
+	<resultMap id="StockAttentionResult" class="StockAttentionDO">
+		<result property="id" column="id" />
+		<result property="code" column="code" />
+		<result property="name" column="name" />
+		<result property="userId" column="user_id" />
+		<result property="gmtCreate" column="gmt_create" />
+		<result property="gmtModified" column="gmt_modified" />
+	</resultMap>
+
+	<sql id="stockAttention.column.all">
+		id, code, name, userId, gmtCreate, gmtModified
+	</sql>
+	
+	<sql id="stockAttention.column.insert">
+		code, name, userId, gmtCreate, gmtModified
+	</sql>
+
+	<insert id="insertStockAttention" parameterClass="StockAttentionDO">
+		INSERT INTO stock_attention (
+		<include refid="stockAttention.column.all" />
+		)
+		VALUES (
+		#code#,
+		#name#,
+		#userId#,
+		now(),
+		now())
+		<selectKey resultClass="long" keyProperty="id">
+      		SELECT last_insert_id()
+    	</selectKey>
+	</insert>
+
+	<select id="getStockAttentionById" parameterClass="long" resultMap="StockAttentionDO">
+		SELECT
+		<include refid="stockAttention.column.all" />
+		FROM stock_attention
+		WHERE id=#value#
+	</select>
+
+	<delete id="deleteStockAttentionById" parameterClass="long">
+		DELETE FROM
+		stock_attention
+		WHERE id=#value#
+	</delete>
+
+	<select id="getStockAttentionListByUserId" parameterClass="long" resultMap="StockAttentionDO">
+		SELECT
+		<include refid="stockAttention.column.all" />
+		FROM stock_attention
+		WHERE user_id=#value#
+		ORDER BY code
+	</select>
+</sqlMap>

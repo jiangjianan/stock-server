@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="stockAnnouncementDAO">
+	<typeAlias alias="StockAnnouncementDO"
+		type="com.jiangjianan.stock.server.object.StockAnnouncementDO" />
+
+	<resultMap id="StockAnnouncementResult" class="StockAnnouncementDO">
+		<result property="id" column="id" />
+		<result property="code" column="code" />
+		<result property="title" column="title" />
+		<result property="url" column="url" />
+		<result property="date" column="date" />
+		<result property="gmtCreate" column="gmt_create" />
+		<result property="gmtModified" column="gmt_modified" />
+	</resultMap>
+
+	<sql id="stockAnnouncement.column.all">
+		id, code, title, url, date, gmt_create, gmt_modified
+	</sql>
+	
+	<sql id="stockAnnouncement.column.insert">
+		code, title, url, date, gmt_create, gmt_modified
+	</sql>
+
+	<insert id="insertStockAnnouncement" parameterClass="StockAnnouncementDO">
+		INSERT INTO stock_announcement (
+		<include refid="stockAnnouncement.column.insert" />
+		)
+		VALUES (
+		#code#,
+		#title#,
+		#url#,
+		#date#,
+		now(),
+		now())
+		<selectKey resultClass="long" keyProperty="id">
+			SELECT
+			last_insert_id()
+		</selectKey>
+	</insert>
+
+	<select id="getStockAnnouncementById" parameterClass="long"
+		resultMap="StockAnnouncementResult">
+		SELECT
+		<include refid="stockAnnouncement.column.all" />
+		FROM stock_announcement
+		WHERE id=#value#
+	</select>
+
+	<delete id="deleteStockAnnouncementById" parameterClass="long">
+		DELETE FROM
+		stock_announcement
+		WHERE id=#value#
+	</delete>
+
+	<select id="getStockAnnouncementListByCode" parameterClass="string"
+		resultMap="StockAnnouncementResult">
+		SELECT
+		<include refid="stockAnnouncement.column.all" />
+		FROM stock_announcement
+		WHERE code=#code#
+		ORDER BY date desc
+	</select>
+	
+	<select id="getRecentStockAnnouncementList" parameterClass="long" resultMap="StockAnnouncementResult">
+		SELECT
+		<include refid="stockAnnouncement.column.all" />
+		FROM stock_announcement
+		WHERE date>=#value#
+		ORDER BY date DESC, code ASC
+	</select>
+</sqlMap>

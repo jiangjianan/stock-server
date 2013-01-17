@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="articleDAO">
+	<typeAlias alias="ArticleDO"
+		type="com.jiangjianan.stock.server.object.ArticleDO" />
+
+	<resultMap id="ArticleResult" class="ArticleDO">
+		<result property="articleId" column="article_id" />
+		<result property="articleTitle" column="article_title" />
+		<result property="articlePubdate" column="article_pubdate" />
+		<result property="articleUppdate" column="article_uppdate" />
+		<result property="className" column="class_name" />
+		<result property="articleBody" column="article_body" />
+		<result property="articleTag" column="article_tag" />
+		<result property="blogName" column="blog_name" />
+		<result property="blogUid" column="blog_uid" />
+		<result property="userNick" column="user_nick" />
+	</resultMap>
+	
+	<resultMap id="ArticleAbstractResult" class="ArticleDO">
+		<result property="articleId" column="article_id" />
+		<result property="articleTitle" column="article_title" />
+		<result property="articlePubdate" column="article_pubdate" />
+		<result property="blogUid" column="blog_uid" />
+		<result property="userNick" column="user_nick" />
+	</resultMap>
+
+	<sql id="article.column.all">
+		article_id, article_title, article_pubdate,
+		article_uppdate, class_name, article_body, article_tag, blog_name,
+		blog_uid, user_nick
+	</sql>
+	
+	<sql id="article.column.abstract">
+		article_id, article_title, article_pubdate, blog_uid, user_nick
+	</sql>
+
+	<insert id="insertArticle" parameterClass="ArticleDO">
+		INSERT INTO sina_article (
+		<include refid="article.column.all" />
+		)
+		VALUES (
+		#articleId#,
+		#articleTitle#,
+		#articlePubdate#,
+		#articleUppdate#,
+		#className#,
+		#articleBody#,
+		#articleTag#,
+		#blogName#,
+		#blogUid#,
+		#userNick#)
+	</insert>
+
+	<update id="updateArticle" parameterClass="ArticleDO">
+		UPDATE sina_article
+		SET
+		article_id = #articleId#,
+		article_title = #articleTitle#,
+		article_pubdate = #articlePubdate#,
+		article_uppdate = #articleUppdate#,
+		class_name = #className#,
+		article_body = #articleBody#,
+		article_tag = #articleTag#,
+		blog_name = #blogName#,
+		blog_uid = #blogUid#,
+		user_nick = #userNick#
+		WHERE article_id= #articleId#
+	</update>
+
+	<select id="getArticleById" parameterClass="string" resultMap="ArticleResult">
+		SELECT
+		<include refid="article.column.all" />
+		FROM sina_article
+		WHERE article_id=#value#
+	</select>
+	
+	<select id="getArticleListByBlogUid" parameterClass="string" resultMap="ArticleAbstractResult">
+		SELECT
+		<include refid="article.column.abstract" />
+		FROM sina_article
+		WHERE blog_uid=#value#
+		ORDER BY article_pubdate DESC
+	</select>
+	
+	<select id="getRecentArticleList" parameterClass="date" resultMap="ArticleAbstractResult">
+		SELECT
+		<include refid="article.column.abstract" />
+		FROM sina_article
+		WHERE article_pubdate>=#value#
+		ORDER BY article_pubdate DESC
+	</select>
+
+	<delete id="deleteArticleById" parameterClass="string">
+		DELETE FROM
+		sina_article
+		WHERE article_id=#value#
+	</delete>
+	
+	<delete id="deleteArticleByBlogUid" parameterClass="string">
+		DELETE FROM
+		sina_article
+		WHERE blog_uid=#value#
+	</delete>
+
+</sqlMap>

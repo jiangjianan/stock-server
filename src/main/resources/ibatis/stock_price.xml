@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="stockPriceDAO">
+	<typeAlias alias="StockPriceDO"
+		type="com.jiangjianan.stock.server.object.StockPriceDO" />
+	
+	<typeAlias alias="StockPriceQuery"
+		type="com.jiangjianan.stock.server.query.StockPriceQuery" />
+
+	<resultMap id="StockPriceResult" class="StockPriceDO">
+		<result property="id" column="id" />
+		<result property="date" column="date" />
+		<result property="code" column="code" />
+		<result property="name" column="name" />
+		<result property="highest" column="highest" />
+		<result property="lowest" column="lowest" />
+		<result property="open" column="open" />
+		<result property="close" column="close" />
+		<result property="previousClose" column="previous_close" />
+		<result property="changeAmount" column="change_amount" />
+		<result property="changeRate" column="change_rate" />
+		<result property="turnoverRate" column="turnover_rate" />
+		<result property="turnover" column="turnover" />
+		<result property="amount" column="amount" />
+		<result property="totalValue" column="total_value" />
+		<result property="marketValue" column="market_value" />
+	</resultMap>
+
+	<sql id="stockPrice.column.all">
+		id, date, code, name, highest, lowest, open, close, previous_close, change_amount, change_rate, turnover_rate, turnover, amount, total_value, market_value 
+	</sql>
+
+	<insert id="insertStockPrice" parameterClass="StockPriceDO">
+		INSERT INTO stock_price (
+		<include refid="stockPrice.column.all" />
+		)
+		VALUES (
+		#id#,
+		#date#,
+		#code#,
+		#name#,
+		#highest#,
+		#lowest#,
+		#open#,
+		#close#,
+		#previousClose#,
+		#changeAmount#,
+		#changeRate#,
+		#turnoverRate#,
+		#turnover#,
+		#amount#,
+		#totalValue#,
+		#marketValue#)
+	</insert>
+
+	<select id="getStockPriceById" parameterClass="string" resultMap="StockPriceResult">
+		SELECT
+		<include refid="stockPrice.column.all" />
+		FROM stock_price
+		WHERE id=#value#
+	</select>
+	
+	<select id="getStockPriceListByQuery" parameterClass="StockPriceQuery" resultMap="StockPriceResult">
+		SELECT
+		<include refid="stockPrice.column.all" />
+		FROM stock_price
+		<dynamic prepend="where">
+			<isNotEmpty prepend="and" property="code">
+				code = #code#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="startDate">
+				date&gt;=#startDate#
+			</isNotEmpty>
+			<isNotEmpty prepend="and" property="endDate">
+				date&lt;=#endDate#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY date DESC
+	</select>
+
+	<delete id="deleteStockPriceById" parameterClass="string">
+		DELETE FROM
+		stock_price
+		WHERE id=#value#
+	</delete>
+
+</sqlMap>

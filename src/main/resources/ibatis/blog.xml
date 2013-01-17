@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="blogDAO">
+	<typeAlias alias="BlogDO"
+		type="com.jiangjianan.stock.server.object.BlogDO" />
+
+	<resultMap id="BlogResult" class="BlogDO">
+		<result property="blogUid" column="blog_uid" />
+		<result property="blogUrl" column="blog_url" />
+		<result property="blogName" column="blog_name" />
+		<result property="userNick" column="user_nick" />
+		<result property="userPic" column="user_pic" />
+		<result property="articleCount" column="article_count" />
+		<result property="uhost" column="uhost" />
+	</resultMap>
+
+	<sql id="blog.column.all">
+		blog_uid, blog_url, blog_name, user_nick, user_pic,
+		article_count, uhost
+	</sql>
+
+	<insert id="insertBlog" parameterClass="BlogDO">
+		INSERT INTO sina_blog (
+		<include refid="blog.column.all" />
+		)
+		VALUES (
+		#blogUid#,
+		#blogUrl#,
+		#blogName#,
+		#userNick#,
+		#userPic#,
+		#articleCount#,
+		#uhost#)
+	</insert>
+
+	<update id="updateBlog" parameterClass="BlogDO">
+		UPDATE sina_blog
+		SET
+		blog_uid = #blogUid#,
+		blog_url = #blogUrl#,
+		blog_name = #blogName#,
+		user_nick = #userNick#,
+		user_pic = #userPic#,
+		article_count = #articleCount#,
+		uhost = #uhost#
+		WHERE blog_uid=#blogUid#
+	</update>
+
+	<select id="getBlogById" parameterClass="string" resultMap="BlogResult">
+		SELECT
+		<include refid="blog.column.all" />
+		FROM sina_blog
+		WHERE blog_uid=#value#
+	</select>
+
+	<delete id="deleteBlogById" parameterClass="string">
+		DELETE FROM
+		sina_blog
+		WHERE blog_uid=#value#
+	</delete>
+	
+	<select id="getBlogList"  resultMap="BlogResult">
+		SELECT
+		<include refid="blog.column.all" />
+		FROM sina_blog
+		ORDER BY user_nick
+	</select>
+</sqlMap>

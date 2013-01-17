@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="stockInfoDAO">
+	<typeAlias alias="StockInfoDO"
+		type="com.jiangjianan.stock.server.object.StockInfoDO" />
+
+	<resultMap id="StockInfoResult" class="StockInfoDO">
+		<result property="code" column="code" />
+		<result property="name" column="name" />
+	</resultMap>
+
+	<sql id="stockInfo.column.all">
+		code, name
+	</sql>
+
+	<insert id="insertStockInfo" parameterClass="StockInfoDO">
+		INSERT INTO stock_info (
+		<include refid="stockInfo.column.all" />
+		)
+		VALUES (
+		#code#,
+		#name#)
+	</insert>
+
+	<select id="getStockInfoByCode" parameterClass="string" resultMap="StockInfoResult">
+		SELECT
+		<include refid="stockInfo.column.all" />
+		FROM stock_info
+		WHERE code=#value#
+	</select>
+	
+	<select id="getStockInfoList" resultMap="StockInfoResult">
+		SELECT
+		<include refid="stockInfo.column.all" />
+		FROM stock_info
+		ORDER BY code
+	</select>
+
+	<delete id="deleteStockInfoByCode" parameterClass="string">
+		DELETE FROM
+		stock_info
+		WHERE code=#value#
+	</delete>
+
+</sqlMap>
