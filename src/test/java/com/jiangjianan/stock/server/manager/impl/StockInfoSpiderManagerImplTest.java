@@ -22,7 +22,7 @@ public class StockInfoSpiderManagerImplTest {
 	 @Test
 	public void getStockPrice() throws ManagerException {
 		StockAnalyzerSpiderManagerImpl manager = new StockAnalyzerSpiderManagerImpl();
-		List<StockPriceDO> list = manager.getStockPrice("600000", 20130108L, 20130108L);
+		List<StockPriceDO> list = manager.getStockPrice("000651", 20130108L, 20130108L);
 		assertEquals(1, list.size());
 	}
 	// @Test

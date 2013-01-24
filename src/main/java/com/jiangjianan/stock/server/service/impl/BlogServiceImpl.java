@@ -1,6 +1,5 @@
 package com.jiangjianan.stock.server.service.impl;
 
-import java.util.Date;
 import java.util.List;
 
 import com.jiangjianan.stock.server.common.service.BaseService;
@@ -13,6 +12,8 @@ import com.jiangjianan.stock.server.manager.SinaOpenApiManager;
 import com.jiangjianan.stock.server.object.ArticleDO;
 import com.jiangjianan.stock.server.object.BlogDO;
 import com.jiangjianan.stock.server.object.TokenDO;
+import com.jiangjianan.stock.server.query.ArticlePageQuery;
+import com.jiangjianan.stock.server.query.BlogPageQuery;
 import com.jiangjianan.stock.server.service.BlogService;
 
 public class BlogServiceImpl extends BaseService implements BlogService {
@@ -36,7 +37,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
 				result.setDefaultModel(tokenDO);
 			}
 		} catch (Exception e) {
-			logger.error("AdminServiceImpl.relogin", e);
+			logger.error("BlogServiceImpl.relogin", e);
 			result.setSuccess(false);
 		}
 		return result;
@@ -50,7 +51,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
 			articleDAO.deleteArticleByBlogUid(blogUid);
 			result.setSuccess(true);
 		} catch (Exception e) {
-			logger.error("AdminServiceImpl.deleteBlogById", e);
+			logger.error("BlogServiceImpl.deleteBlogById", e);
 			result.setSuccess(false);
 		}
 		return result;
@@ -69,7 +70,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
 				result.setSuccess(false);
 			}
 		} catch (Exception e) {
-			logger.error("AdminServiceImpl.insertBlogById", e);
+			logger.error("BlogServiceImpl.insertBlogById", e);
 			result.setSuccess(false);
 		}
 		return result;
@@ -109,7 +110,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
 			blogDAO.updateBlog(blogDO);
 			result.setSuccess(true);
 		} catch (Exception e) {
-			logger.error("AdminServiceImpl.updateBlogArticleById", e);
+			logger.error("BlogServiceImpl.updateBlogArticleById", e);
 			result.setSuccess(false);
 		}
 		return result;
@@ -124,7 +125,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
 				updateBlogArticleById(blogDO.getBlogUid(), rebuild, quick);
 			}
 		} catch (Exception e) {
-			logger.error("AdminServiceImpl.updateBlogArticleById", e);
+			logger.error("BlogServiceImpl.updateBlogArticleById", e);
 			result.setSuccess(false);
 		}
 		return result;
@@ -137,21 +138,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
 			sinaOpenApiManager.setAccessToken(accessToken);
 			result.setSuccess(true);
 		} catch (Exception e) {
-			logger.error("AdminServiceImpl.insertBlogById", e);
-			result.setSuccess(false);
-		}
-		return result;
-	}
-
-	@Override
-	public Result<List<BlogDO>> getBlogList() {
-		Result<List<BlogDO>> result = new ResultSupport<List<BlogDO>>();
-		try {
-			List<BlogDO> blogList = blogDAO.getBlogList();
-			result.setSuccess(true);
-			result.setDefaultModel(blogList);
-		} catch (Exception e) {
-			logger.error("QueryServiceImpl.getBlogList", e);
+			logger.error("BlogServiceImpl.insertBlogById", e);
 			result.setSuccess(false);
 		}
 		return result;
@@ -165,7 +152,7 @@ public class BlogServiceImpl extends BaseService implements BlogService {
 			result.setSuccess(true);
 			result.setDefaultModel(blogDO);
 		} catch (Exception e) {
-			logger.error("QueryServiceImpl.getBlogList", e);
+			logger.error("BlogServiceImpl.getBlogList", e);
 			result.setSuccess(false);
 		}
 		return result;
@@ -179,35 +166,35 @@ public class BlogServiceImpl extends BaseService implements BlogService {
 			result.setSuccess(true);
 			result.setDefaultModel(articleDO);
 		} catch (Exception e) {
-			logger.error("QueryServiceImpl.getArticleById", e);
+			logger.error("BlogServiceImpl.getArticleById", e);
 			result.setSuccess(false);
 		}
 		return result;
 	}
 
 	@Override
-	public Result<List<ArticleDO>> getArticleListByBlogUid(String blogUid) {
-		Result<List<ArticleDO>> result = new ResultSupport<List<ArticleDO>>();
+	public Result<ArticlePageQuery> getArticleList(ArticlePageQuery query) {
+		Result<ArticlePageQuery> result = new ResultSupport<ArticlePageQuery>();
 		try {
-			List<ArticleDO> list = articleDAO.getArticleListByBlogUid(blogUid);
+			query = articleDAO.getArticleListByPageQuery(query);
 			result.setSuccess(true);
-			result.setDefaultModel(list);
+			result.setDefaultModel(query);
 		} catch (Exception e) {
-			logger.error("QueryServiceImpl.getArticleListByBlogUid", e);
+			logger.error("BlogServiceImpl.getArticleList", e);
 			result.setSuccess(false);
 		}
 		return result;
 	}
 
 	@Override
-	public Result<List<ArticleDO>> getRecentArticleList(Date startDate) {
-		Result<List<ArticleDO>> result = new ResultSupport<List<ArticleDO>>();
+	public Result<BlogPageQuery> getBlogList(BlogPageQuery query) {
+		Result<BlogPageQuery> result = new ResultSupport<BlogPageQuery>();
 		try {
-			List<ArticleDO> list = articleDAO.getRecentArticleList(startDate);
+			query = blogDAO.getBlogListByPageQuery(query);
 			result.setSuccess(true);
-			result.setDefaultModel(list);
+			result.setDefaultModel(query);
 		} catch (Exception e) {
-			logger.error("QueryServiceImpl.getArticleListByBlogUid", e);
+			logger.error("BlogServiceImpl.getBlogList", e);
 			result.setSuccess(false);
 		}
 		return result;

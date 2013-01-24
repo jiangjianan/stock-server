@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import com.jiangjianan.stock.server.object.ArticleDO;
+import com.jiangjianan.stock.server.query.ArticlePageQuery;
 
 public interface ArticleDAO {
 
@@ -20,4 +21,7 @@ public interface ArticleDAO {
 	public List<ArticleDO> getArticleListByBlogUid(String blogUid);
 
 	public List<ArticleDO> getRecentArticleList(Date startDate);
+
+	public ArticlePageQuery getArticleListByPageQuery(
+			ArticlePageQuery query);
 }

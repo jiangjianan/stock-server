@@ -8,10 +8,11 @@ import com.jiangjianan.stock.server.common.service.BaseService;
 import com.jiangjianan.stock.server.common.service.Result;
 import com.jiangjianan.stock.server.common.service.ResultSupport;
 import com.jiangjianan.stock.server.dao.StockAnnouncementDAO;
+import com.jiangjianan.stock.server.dao.StockAttentionDAO;
 import com.jiangjianan.stock.server.dao.StockInfoDAO;
 import com.jiangjianan.stock.server.manager.StockAnnouncementSpiderManager;
 import com.jiangjianan.stock.server.object.StockAnnouncementDO;
-import com.jiangjianan.stock.server.object.StockInfoDO;
+import com.jiangjianan.stock.server.query.StockAnnouncementPageQuery;
 import com.jiangjianan.stock.server.service.StockAnnouncementService;
 
 public class StockAnnouncementServiceImpl extends BaseService implements
@@ -20,6 +21,7 @@ public class StockAnnouncementServiceImpl extends BaseService implements
 	private StockAnnouncementSpiderManager stockAnnouncementSpiderManager;
 	private StockAnnouncementDAO stockAnnouncementDAO;
 	private StockInfoDAO stockInfoDAO;
+	private StockAttentionDAO stockAttentionDAO;
 
 	@Override
 	public Result<Boolean> updateStockAnnouncementByCode(String code) {
@@ -78,30 +80,13 @@ public class StockAnnouncementServiceImpl extends BaseService implements
 	}
 
 	@Override
-	public Result<List<StockAnnouncementDO>> getStockAnnouncementListByCode(
-			String code) {
-		Result<List<StockAnnouncementDO>> result = new ResultSupport<List<StockAnnouncementDO>>();
-		try {
-			List<StockAnnouncementDO> list = stockAnnouncementDAO
-					.getStockAnnouncementListByCode(code);
-			result.setDefaultModel(list);
-			result.setSuccess(true);
-		} catch (Exception e) {
-			result.setSuccess(false);
-			logger.error(
-					"StockAnnouncementSpiderImplManager.getStockAnnouncementByCode",
-					e);
-		}
-		return result;
-	}
-
-	@Override
 	public Result<Boolean> updateAllStockAnnouncement() {
 		Result<Boolean> result = new ResultSupport<Boolean>();
 		try {
-			List<StockInfoDO> list = stockInfoDAO.getStockInfoList();
-			for (StockInfoDO stockInfo : list) {
-				updateStockAnnouncementByCode(stockInfo.getCode());
+			List<String> list = stockAttentionDAO
+					.getStockAttentionListCodeList();
+			for (String code : list) {
+				updateStockAnnouncementByCode(code);
 			}
 			result.setSuccess(true);
 		} catch (Exception e) {
@@ -112,16 +97,18 @@ public class StockAnnouncementServiceImpl extends BaseService implements
 		}
 		return result;
 	}
-	
-	public Result<List<StockAnnouncementDO>> getRecentStockAnnouncementList(Long startDate) {
-		Result<List<StockAnnouncementDO>> result = new ResultSupport<List<StockAnnouncementDO>>();
+
+	public Result<StockAnnouncementPageQuery> getStockAnnouncementList(
+			StockAnnouncementPageQuery query) {
+		Result<StockAnnouncementPageQuery> result = new ResultSupport<StockAnnouncementPageQuery>();
 		try {
-			List<StockAnnouncementDO> list = stockAnnouncementDAO.getRecentStockAnnouncementList(startDate);
-			result.setDefaultModel(list);
+			query = stockAnnouncementDAO
+					.getStockAnnouncementListByPageQuery(query);
+			result.setDefaultModel(query);
 			result.setSuccess(true);
 		} catch (Exception e) {
 			logger.error(
-					"StockAnnouncementSpiderImplManager.updateAllStockAnnouncement",
+					"StockAnnouncementSpiderImplManager.getRecentStockAnnouncementList",
 					e);
 			result.setSuccess(false);
 		}
@@ -152,6 +139,14 @@ public class StockAnnouncementServiceImpl extends BaseService implements
 
 	public void setStockInfoDAO(StockInfoDAO stockInfoDAO) {
 		this.stockInfoDAO = stockInfoDAO;
+	}
+
+	public StockAttentionDAO getStockAttentionDAO() {
+		return stockAttentionDAO;
+	}
+
+	public void setStockAttentionDAO(StockAttentionDAO stockAttentionDAO) {
+		this.stockAttentionDAO = stockAttentionDAO;
 	}
 
 }

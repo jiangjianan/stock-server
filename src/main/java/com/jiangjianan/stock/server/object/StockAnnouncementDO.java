@@ -71,10 +71,8 @@ public class StockAnnouncementDO extends BaseDO {
 	}
 	
 	public String getDateString() {
-		long year = date / 10000;
-		long month = date % 10000 / 100;
-		long day = date % 100;
-		return year + "-" + month + "-" + day;
+		String sDate = date.toString();
+		return sDate.substring(0, 4) + "-" + sDate.substring(4, 6) + "-" + sDate.substring(6, 8);
 	}
 
 }

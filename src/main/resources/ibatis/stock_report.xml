@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="stockReportDAO">
+	<typeAlias alias="StockReportDO"
+		type="com.jiangjianan.stock.server.object.StockReportDO" />
+
+	<resultMap id="StockReportResult" class="StockReportDO">
+		<result property="id" column="id" />
+		<result property="code" column="code" />
+		<result property="date" column="date" />
+		<result property="eps" column="eps" />
+		<result property="navps" column="navps" />
+		<result property="cashFlowPerStock" column="cash_flow_per_stock" />
+		<result property="businessIncome" column="business_income" />
+		<result property="grossProfit" column="gross_profit" />
+		<result property="businessProfit" column="business_profit" />
+		<result property="investProfit" column="invest_profit" />
+		<result property="nonOperationIncome" column="non_operation_income" />
+		<result property="totalProfit" column="total_profit" />
+		<result property="netProfit" column="net_profit" />
+		<result property="deductNetProfit" column="deduct_net_profit" />
+		<result property="cashFlow" column="cash_flow" />
+		<result property="cashAdded" column="cash_added" />
+		<result property="totalAssets" column="total_assets" />
+		<result property="currentAssets" column="current_assets" />
+		<result property="grossLiability" column="gross_liability" />
+		<result property="currentLiabilities" column="current_liabilities" />
+		<result property="netAssets" column="net_assets" />
+		<result property="roe" column="roe" />
+	</resultMap>
+
+	<sql id="stockReport.column.all">
+		id, code, date, eps, navps, cash_flow_per_stock, business_income, gross_profit, business_profit, invest_profit, non_operation_income, total_profit, net_profit, deduct_net_profit, cash_flow, cash_added,  total_assets, current_assets, gross_liability, current_liabilities, net_assets, roe 
+	</sql>
+
+	<insert id="insertStockReport" parameterClass="StockReportDO">
+		INSERT INTO stock_report (
+		<include refid="stockReport.column.all" />
+		)
+		VALUES (
+		#id#,
+		#code#,
+		#date#,
+		#eps#,
+		#navps#,
+		#cashFlowPerStock#,
+		#businessIncome#,
+		#grossProfit#,
+		#businessProfit#,
+		#investProfit#,
+		#nonOperationIncome#,
+		#totalProfit#,
+		#netProfit#,
+		#deductNetProfit#,
+		#cashFlow#,
+		#cashAdded#,
+		#totalAssets#,
+		#currentAssets#,
+		#grossLiability#,
+		#currentLiabilities#,
+		#netAssets#,
+		#roe#)
+	</insert>
+
+	<select id="getStockReportById" parameterClass="string" resultMap="StockReportResult">
+		SELECT
+		<include refid="stockReport.column.all" />
+		FROM stock_report
+		WHERE id=#value#
+	</select>
+	
+	<select id="getStockReportListByCode" parameterClass="string" resultMap="StockReportResult">
+		SELECT
+		<include refid="stockReport.column.all" />
+		FROM stock_report
+		WHERE code=#value#
+		ORDER BY date DESC
+	</select>
+
+	<delete id="deleteStockReportById" parameterClass="string">
+		DELETE FROM
+		stock_report
+		WHERE id=#value#
+	</delete>
+	
+	<delete id="deleteArticleByCode" parameterClass="string">
+		DELETE FROM
+		stock_report
+		WHERE code=#value#
+	</delete>
+
+</sqlMap>

@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jiangjianan.stock.server.common.service.Result;
 import com.jiangjianan.stock.server.object.StockAnnouncementDO;
+import com.jiangjianan.stock.server.query.StockAnnouncementPageQuery;
 import com.jiangjianan.stock.server.service.StockAnnouncementService;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -19,12 +20,24 @@ public class StockAnnouncementListByCodeAction extends ActionSupport {
 
 	private List<StockAnnouncementDO> stockAnnouncementList;
 	private String code;
+	private int page;
+	private int count;
+	private int pageCount;
 
 	public String execute() throws Exception {
-		Result<List<StockAnnouncementDO>> result = stockAnnouncementService
-				.getStockAnnouncementListByCode(code);
+		if (page == 0) {
+			page = 1;
+		}
+		StockAnnouncementPageQuery query = new StockAnnouncementPageQuery();
+		query.setCode(code);
+		query.setPage(page);
+		Result<StockAnnouncementPageQuery> result = stockAnnouncementService
+				.getStockAnnouncementList(query);
 		if (result.isSuccess()) {
-			stockAnnouncementList = result.getDefaultModel();
+			query = result.getDefaultModel();
+			stockAnnouncementList = query.getList();
+			count = query.getCount();
+			pageCount = query.getPageCount();
 		}
 		return SUCCESS;
 	}
@@ -53,6 +66,30 @@ public class StockAnnouncementListByCodeAction extends ActionSupport {
 
 	public void setCode(String code) {
 		this.code = code;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
+	public int getPageCount() {
+		return pageCount;
+	}
+
+	public void setPageCount(int pageCount) {
+		this.pageCount = pageCount;
 	}
 
 }

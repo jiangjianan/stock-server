@@ -7,6 +7,7 @@ import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 
 import com.jiangjianan.stock.server.dao.ArticleDAO;
 import com.jiangjianan.stock.server.object.ArticleDO;
+import com.jiangjianan.stock.server.query.ArticlePageQuery;
 
 @SuppressWarnings("deprecation")
 public class ArticleDAOImpl extends SqlMapClientDaoSupport implements
@@ -54,5 +55,20 @@ public class ArticleDAOImpl extends SqlMapClientDaoSupport implements
 	public List<ArticleDO> getRecentArticleList(Date startDate) {
 		return (List<ArticleDO>) this.getSqlMapClientTemplate().queryForList(
 				"articleDAO.getRecentArticleList", startDate);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public ArticlePageQuery getArticleListByPageQuery(ArticlePageQuery query) {
+		Integer count = (Integer) this.getSqlMapClientTemplate()
+				.queryForObject("articleDAO.getArticleListByPageQueryCount",
+						query);
+		query.setCount(count);
+		if (count > 0) {
+			List<ArticleDO> list = this.getSqlMapClientTemplate().queryForList(
+					"articleDAO.getArticleListByPageQuery", query);
+			query.setList(list);
+		}
+		return query;
 	}
 }

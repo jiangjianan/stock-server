@@ -5,7 +5,7 @@ import org.apache.struts2.convention.annotation.Result;
 import org.apache.struts2.convention.annotation.Results;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.jiangjianan.stock.server.service.AnalyzerAdminService;
+import com.jiangjianan.stock.server.service.StockInfoService;
 import com.opensymphony.xwork2.ActionSupport;
 
 @ParentPackage("struts-default")
@@ -14,22 +14,21 @@ public class DeleteStockInfoAction extends ActionSupport {
 	private static final long serialVersionUID = 1L;
 
 	@Autowired
-	private AnalyzerAdminService analyzerAdminService;
+	private StockInfoService stockInfoService;
 
 	private String code;
 
 	public String execute() throws Exception {
-		analyzerAdminService.deleteStockInfo(code);
+		stockInfoService.deleteStockInfo(code);
 		return SUCCESS;
 	}
 
-	public AnalyzerAdminService getAnalyzerAdminService() {
-		return analyzerAdminService;
+	public StockInfoService getStockInfoService() {
+		return stockInfoService;
 	}
 
-	public void setAnalyzerAdminService(
-			AnalyzerAdminService analyzerAdminService) {
-		this.analyzerAdminService = analyzerAdminService;
+	public void setStockInfoService(StockInfoService stockInfoService) {
+		this.stockInfoService = stockInfoService;
 	}
 
 	public String getCode() {

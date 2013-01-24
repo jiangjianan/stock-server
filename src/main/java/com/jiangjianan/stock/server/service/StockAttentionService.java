@@ -6,9 +6,9 @@ import com.jiangjianan.stock.server.common.service.Result;
 import com.jiangjianan.stock.server.object.StockAttentionDO;
 
 public interface StockAttentionService {
-	public Result<List<StockAttentionDO>> getStockAttentionList();
+	public Result<List<StockAttentionDO>> getStockAttentionListByUserId(Long userId);
 
-	public Result<Boolean> InsertStockAttention(StockAttentionDO stockAttentionDO);
+	public Result<Boolean> insertStockAttention(StockAttentionDO stockAttentionDO);
 
 	public Result<Boolean> deleteStockAttentionById(Long id);
 }

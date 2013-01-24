@@ -9,6 +9,10 @@ public class UserDO extends BaseDO {
 	private Long id;
 	private String name;
 	private String password;
+	private String email;
+	private Date login;
+	private int type;
+	private int status;
 	private Date gmtCreate;
 	private Date gmtModifide;
 
@@ -50,6 +54,38 @@ public class UserDO extends BaseDO {
 
 	public void setGmtModifide(Date gmtModifide) {
 		this.gmtModifide = gmtModifide;
+	}
+
+	public int getType() {
+		return type;
+	}
+
+	public void setType(int type) {
+		this.type = type;
+	}
+
+	public Date getLogin() {
+		return login;
+	}
+
+	public void setLogin(Date login) {
+		this.login = login;
+	}
+
+	public String getEmail() {
+		return email;
+	}
+
+	public void setEmail(String email) {
+		this.email = email;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
 	}
 
 }

@@ -9,7 +9,7 @@ import com.jiangjianan.stock.server.service.StockAnnouncementService;
 import com.opensymphony.xwork2.ActionSupport;
 
 @ParentPackage("struts-default")
-@Results({ @Result(location = "../info/stock-info-list", type = "redirectAction") })
+@Results({ @Result(location = "../attention/stock-attention-list", type = "redirectAction") })
 public class UpdateAllStockAnnouncementAction extends ActionSupport {
 	private static final long serialVersionUID = 1L;
 

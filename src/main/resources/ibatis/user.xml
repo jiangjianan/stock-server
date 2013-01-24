@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="userDAO">
+	<typeAlias alias="UserDO"
+		type="com.jiangjianan.stock.server.object.UserDO" />
+
+	<resultMap id="UserResult" class="UserDO">
+		<result property="id" column="id" />
+		<result property="name" column="name" />
+		<result property="password" column="password" />
+		<result property="email" column="email" />
+		<result property="login" column="login" />
+		<result property="type" column="type" />
+		<result property="status" column="status" />
+		<result property="gmtCreate" column="gmt_create" />
+		<result property="gmtModifide" column="gmt_modified" />
+	</resultMap>
+
+	<sql id="user.column.all">
+		id, name, password, email, login, type, status, gmt_create, gmt_modified
+	</sql>
+	
+	<sql id="user.column.insert">
+		name, password, email, login, type, status, gmt_create, gmt_modified
+	</sql>
+
+	<insert id="insertUser" parameterClass="UserDO">
+		INSERT INTO user (
+		<include refid="user.column.insert" />
+		)
+		VALUES (
+		#name#,
+		#password#,
+		#email#,
+		#login#,
+		#type#,
+		#status#,
+		now(),
+		now())
+		<selectKey resultClass="long" keyProperty="id">
+			SELECT
+			last_insert_id()
+		</selectKey>
+	</insert>
+
+	<update id="updateUser" parameterClass="UserDO">
+		UPDATE user
+		SET
+		name = #name#,
+		password = #password#,
+		email = #email#,
+		login = #login#,
+		type = #type#,
+		status = #status#,
+		gmt_modifide = now()
+		WHERE id= #id#
+	</update>
+
+	<select id="getUserById" parameterClass="long" resultMap="UserResult">
+		SELECT
+		<include refid="user.column.all" />
+		FROM user
+		WHERE id=#value#
+	</select>
+	
+	<select id="getUserByName" parameterClass="string" resultMap="UserResult">
+		SELECT
+		<include refid="user.column.all" />
+		FROM user
+		WHERE name=#value#
+	</select>
+
+	<delete id="deleteUserById" parameterClass="long">
+		DELETE FROM
+		user
+		WHERE id=#value#
+	</delete>
+
+</sqlMap>

@@ -4,6 +4,8 @@
 <sqlMap namespace="articleDAO">
 	<typeAlias alias="ArticleDO"
 		type="com.jiangjianan.stock.server.object.ArticleDO" />
+	<typeAlias alias="ArticlePageQuery"
+		type="com.jiangjianan.stock.server.query.ArticlePageQuery" />
 
 	<resultMap id="ArticleResult" class="ArticleDO">
 		<result property="articleId" column="article_id" />
@@ -103,5 +105,34 @@
 		sina_article
 		WHERE blog_uid=#value#
 	</delete>
+	
+	<select id="getArticleListByPageQueryCount" parameterClass="ArticlePageQuery"
+		resultClass="int">
+		SELECT count(*)
+		FROM sina_article
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="blogUid">
+				blog_uid=#blogUid#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="startDate">
+				article_pubdate>=#startDate#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="getArticleListByPageQuery" parameterClass="ArticlePageQuery" resultMap="ArticleResult">
+		SELECT <include refid="article.column.all" /> 
+		FROM sina_article
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="blogUid">
+				blog_uid=#blogUid#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="startDate">
+				article_pubdate>=#startDate#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY article_pubdate DESC
+		LIMIT #start#, #pageSize#
+	</select>
 
 </sqlMap>

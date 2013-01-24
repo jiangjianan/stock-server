@@ -15,16 +15,16 @@
 	</resultMap>
 
 	<sql id="stockAttention.column.all">
-		id, code, name, userId, gmtCreate, gmtModified
+		id, code, name, user_id, gmt_create, gmt_modified
 	</sql>
 	
 	<sql id="stockAttention.column.insert">
-		code, name, userId, gmtCreate, gmtModified
+		code, name, user_id, gmt_create, gmt_modified
 	</sql>
 
 	<insert id="insertStockAttention" parameterClass="StockAttentionDO">
 		INSERT INTO stock_attention (
-		<include refid="stockAttention.column.all" />
+		<include refid="stockAttention.column.insert" />
 		)
 		VALUES (
 		#code#,
@@ -37,7 +37,7 @@
     	</selectKey>
 	</insert>
 
-	<select id="getStockAttentionById" parameterClass="long" resultMap="StockAttentionDO">
+	<select id="getStockAttentionById" parameterClass="long" resultMap="StockAttentionResult">
 		SELECT
 		<include refid="stockAttention.column.all" />
 		FROM stock_attention
@@ -50,11 +50,17 @@
 		WHERE id=#value#
 	</delete>
 
-	<select id="getStockAttentionListByUserId" parameterClass="long" resultMap="StockAttentionDO">
+	<select id="getStockAttentionListByUserId" parameterClass="long" resultMap="StockAttentionResult">
 		SELECT
 		<include refid="stockAttention.column.all" />
 		FROM stock_attention
 		WHERE user_id=#value#
+		ORDER BY code
+	</select>
+	
+	<select id="getStockAttentionListCodeList" resultClass="string">
+		SELECT DISTINCT(code)
+		FROM stock_attention
 		ORDER BY code
 	</select>
 </sqlMap>

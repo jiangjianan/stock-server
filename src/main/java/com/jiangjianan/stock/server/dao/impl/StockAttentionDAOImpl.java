@@ -26,15 +26,23 @@ public class StockAttentionDAOImpl extends SqlMapClientDaoSupport implements
 	@SuppressWarnings("unchecked")
 	@Override
 	public List<StockAttentionDO> getStockAttentionListByUserId(Long userId) {
-		return (List<StockAttentionDO>) this
-				.getSqlMapClientTemplate()
-				.queryForList("stockAttentionDAO.getStockAttentionListByUserId");
+		return (List<StockAttentionDO>) this.getSqlMapClientTemplate()
+				.queryForList(
+						"stockAttentionDAO.getStockAttentionListByUserId",
+						userId);
 	}
 
 	@Override
 	public StockAttentionDO getStockAttentionById(Long id) {
 		return (StockAttentionDO) this.getSqlMapClientTemplate()
 				.queryForObject("stockAttentionDAO.getStockAttentionById", id);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<String> getStockAttentionListCodeList() {
+		return (List<String>) this.getSqlMapClientTemplate().queryForList(
+				"stockAttentionDAO.getStockAttentionListCodeList");
 	}
 
 }

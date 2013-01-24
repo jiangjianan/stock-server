@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jiangjianan.stock.server.common.service.Result;
 import com.jiangjianan.stock.server.object.StockAnnouncementDO;
+import com.jiangjianan.stock.server.query.StockAnnouncementPageQuery;
 import com.jiangjianan.stock.server.service.StockAnnouncementService;
 import com.jiangjianan.stock.server.util.DateUtil;
 import com.opensymphony.xwork2.ActionSupport;
@@ -20,15 +21,28 @@ public class RecentStockAnnouncementListAction extends ActionSupport {
 	private StockAnnouncementService stockAnnouncementService;
 
 	private List<StockAnnouncementDO> stockAnnouncementList;
+	private int page;
+	private int count;
+	private int pageCount;
 
 	public String execute() throws Exception {
+		if (page == 0) {
+			page = 1;
+		}
 		long time = System.currentTimeMillis();
-		time -= 3 * 24 * 60 * 60 * 1000L;
+		time -= 7 * 24 * 60 * 60 * 1000L;
 		Date date = new Date(time);
-		Result<List<StockAnnouncementDO>> result = stockAnnouncementService
-				.getRecentStockAnnouncementList(Long.valueOf(DateUtil.dateToString(date)));
+		Long startDate = Long.valueOf(DateUtil.dateToString(date));
+		StockAnnouncementPageQuery query = new StockAnnouncementPageQuery();
+		query.setStartDate(startDate);
+		query.setPage(page);
+		Result<StockAnnouncementPageQuery> result = stockAnnouncementService
+				.getStockAnnouncementList(query);
 		if (result.isSuccess()) {
-			stockAnnouncementList = result.getDefaultModel();
+			query = result.getDefaultModel();
+			stockAnnouncementList = query.getList();
+			count = query.getCount();
+			pageCount = query.getPageCount();
 		}
 		return SUCCESS;
 	}
@@ -49,6 +63,30 @@ public class RecentStockAnnouncementListAction extends ActionSupport {
 	public void setStockAnnouncementList(
 			List<StockAnnouncementDO> stockAnnouncementList) {
 		this.stockAnnouncementList = stockAnnouncementList;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
+	}
+
+	public int getPageCount() {
+		return pageCount;
+	}
+
+	public void setPageCount(int pageCount) {
+		this.pageCount = pageCount;
 	}
 
 }

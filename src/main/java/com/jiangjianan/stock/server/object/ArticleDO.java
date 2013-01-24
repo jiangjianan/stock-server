@@ -1,5 +1,6 @@
 package com.jiangjianan.stock.server.object;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ArticleDO extends SinaBaseDO {
@@ -94,6 +95,12 @@ public class ArticleDO extends SinaBaseDO {
 
 	public void setUserNick(String userNick) {
 		this.userNick = userNick;
+	}
+
+	public String getArticlePubdateString() {
+		SimpleDateFormat dateFormat = new SimpleDateFormat(
+				"yyyy-MM-dd HH:mm:ss");
+		return dateFormat.format(articlePubdate);
 	}
 
 }

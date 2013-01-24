@@ -6,6 +6,7 @@ import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 
 import com.jiangjianan.stock.server.dao.BlogDAO;
 import com.jiangjianan.stock.server.object.BlogDO;
+import com.jiangjianan.stock.server.query.BlogPageQuery;
 
 @SuppressWarnings("deprecation")
 public class BlogDAOImpl extends SqlMapClientDaoSupport implements BlogDAO {
@@ -36,5 +37,19 @@ public class BlogDAOImpl extends SqlMapClientDaoSupport implements BlogDAO {
 	public List<BlogDO> getBlogList() {
 		return (List<BlogDO>) this.getSqlMapClientTemplate().queryForList(
 				"blogDAO.getBlogList");
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public BlogPageQuery getBlogListByPageQuery(BlogPageQuery query) {
+		Integer count = (Integer) this.getSqlMapClientTemplate()
+				.queryForObject("blogDAO.getBlogListByPageQueryCount", query);
+		query.setCount(count);
+		if (count > 0) {
+			List<BlogDO> list = this.getSqlMapClientTemplate().queryForList(
+					"blogDAO.getBlogListByPageQuery", query);
+			query.setList(list);
+		}
+		return query;
 	}
 }

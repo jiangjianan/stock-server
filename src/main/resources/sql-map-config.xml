@@ -10,6 +10,8 @@
 	<sqlMap resource="ibatis/blog.xml" />
 	<sqlMap resource="ibatis/stock_info.xml" />
 	<sqlMap resource="ibatis/stock_price.xml" />
-	<!--  <sqlMap resource="ibatis/stock_attention.xml" />-->
+	<sqlMap resource="ibatis/stock_attention.xml" />
 	<sqlMap resource="ibatis/stock_announcement.xml" />
+	<sqlMap resource="ibatis/stock_report.xml" />
+	<sqlMap resource="ibatis/user.xml" />
 </sqlMapConfig>

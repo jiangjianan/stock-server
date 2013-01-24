@@ -2,8 +2,9 @@
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://www.ibatis.com/dtd/sql-map-2.dtd">
 
 <sqlMap namespace="blogDAO">
-	<typeAlias alias="BlogDO"
-		type="com.jiangjianan.stock.server.object.BlogDO" />
+	<typeAlias alias="BlogDO" type="com.jiangjianan.stock.server.object.BlogDO" />
+	<typeAlias alias="BlogPageQuery"
+		type="com.jiangjianan.stock.server.query.BlogPageQuery" />
 
 	<resultMap id="BlogResult" class="BlogDO">
 		<result property="blogUid" column="blog_uid" />
@@ -42,7 +43,8 @@
 		blog_name = #blogName#,
 		user_nick = #userNick#,
 		user_pic = #userPic#,
-		article_count = #articleCount#,
+		article_count =
+		#articleCount#,
 		uhost = #uhost#
 		WHERE blog_uid=#blogUid#
 	</update>
@@ -59,11 +61,24 @@
 		sina_blog
 		WHERE blog_uid=#value#
 	</delete>
-	
-	<select id="getBlogList"  resultMap="BlogResult">
+
+	<select id="getBlogList" resultMap="BlogResult">
 		SELECT
 		<include refid="blog.column.all" />
 		FROM sina_blog
 		ORDER BY user_nick
+	</select>
+
+	<select id="getBlogListByPageQueryCount" parameterClass="BlogPageQuery"
+		resultClass="int">
+		SELECT count(*)
+		FROM sina_blog
+	</select>
+
+	<select id="getBlogListByPageQuery" parameterClass="BlogPageQuery" resultMap="BlogResult">
+		SELECT <include refid="blog.column.all" /> 
+		FROM sina_blog
+		ORDER BY user_nick
+		LIMIT #start#, #pageSize#
 	</select>
 </sqlMap>

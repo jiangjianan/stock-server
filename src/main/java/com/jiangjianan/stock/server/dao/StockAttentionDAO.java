@@ -11,6 +11,8 @@ public interface StockAttentionDAO {
 	public void deleteStockAttentionById(Long id);
 
 	public List<StockAttentionDO> getStockAttentionListByUserId(Long userId);
+	
+	public List<String> getStockAttentionListCodeList();
 
 	public StockAttentionDO getStockAttentionById(Long id);
 

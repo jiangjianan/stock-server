@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,23 +7,21 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
 <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
+<script src="/js/jquery-1.9.0.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
 </head>
 <body>
 	<div class="container">
-		<div class="navbar">
-			<div class="navbar-inner">
-				<a class="brand" href="/index.action">价值投资</a>
-				<ul class="nav">
-					<li><a href="/info/stock-info-list.action">股票列表</a></li>
-					<li class="divider-vertical"></li>
-					<li><a href="/announcement/recent-stock-announcement-list.action">公司公告</a></li>
-					<li class="divider-vertical"></li>
-					<li><a href="/blog/blog-list.action">价值名博</a></li>
-				</ul>
-			</div>
-		</div>
+		<jsp:include page="../module/nav.jsp" flush="true">
+			<jsp:param name="index" value="2" />
+		</jsp:include>
+		
+		<jsp:include page="../module/page_changer.jsp" flush="true">
+			<jsp:param name="currentPage" value="${requestScope.page}" />
+			<jsp:param name="pageCount" value="${requestScope.pageCount}" />
+			<jsp:param name="pageUrl" value="stock-announcement-list-by-code.action?code=${requestScope.code}&page=" />
+		</jsp:include>
 
-		<a href="update-stock-announcement-by-code.action?code=<s:property value="code" />">更新公告</a>
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -34,16 +32,24 @@
 				</tr>
 			</thead>
 			<tbody>
-				<s:iterator value="stockAnnouncementList">
+				<c:forEach var="stockAnnouncement" items="${requestScope.stockAnnouncementList}">
 					<tr>
-						<td><s:property value="id" /></td>
-						<td><a href="<s:property value="url" />" target="_blank"><s:property value="title" /></a></td>
-						<td><s:property value="date" /></td>
-						<td><a href="delete-stock-announcement-by-id.action?id=<s:property value="id" />&code=<s:property value="code" />">删除</a></td>
+						<td>${stockAnnouncement.id}</td>
+						<td><a href="${stockAnnouncement.url}" target="_blank">${stockAnnouncement.title}</a></td>
+						<td>${stockAnnouncement.dateString}</td>
+						<c:if test="${sessionScope.user.type == 2}">
+						<td><a href="delete-stock-announcement-by-id.action?id=${stockAnnouncement.id}&code=${stockAnnouncement.code}">删除</a></td>
+						</c:if>
 					</tr>
-				</s:iterator>
+				</c:forEach>
 			</tbody>
 		</table>
+		
+		<jsp:include page="../module/page_changer.jsp" flush="true">
+			<jsp:param name="currentPage" value="${requestScope.page}" />
+			<jsp:param name="pageCount" value="${requestScope.pageCount}" />
+			<jsp:param name="pageUrl" value="stock-announcement-list-by-code.action?code=${requestScope.code}&page=" />
+		</jsp:include>
 	</div>
 </body>
 </html>

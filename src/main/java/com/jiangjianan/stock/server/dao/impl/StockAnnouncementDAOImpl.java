@@ -6,6 +6,7 @@ import org.springframework.orm.ibatis.support.SqlMapClientDaoSupport;
 
 import com.jiangjianan.stock.server.dao.StockAnnouncementDAO;
 import com.jiangjianan.stock.server.object.StockAnnouncementDO;
+import com.jiangjianan.stock.server.query.StockAnnouncementPageQuery;
 
 @SuppressWarnings("deprecation")
 public class StockAnnouncementDAOImpl extends SqlMapClientDaoSupport implements
@@ -48,6 +49,21 @@ public class StockAnnouncementDAOImpl extends SqlMapClientDaoSupport implements
 				.queryForList(
 						"stockAnnouncementDAO.getRecentStockAnnouncementList",
 						startDate);
+	}
+
+	@SuppressWarnings("unchecked")
+	@Override
+	public StockAnnouncementPageQuery getStockAnnouncementListByPageQuery(
+			StockAnnouncementPageQuery query) {
+		Integer count = (Integer) this.getSqlMapClientTemplate()
+				.queryForObject("stockAnnouncementDAO.getStockAnnouncementListByPageQueryCount", query);
+		query.setCount(count);
+		if (count > 0) {
+			List<StockAnnouncementDO> list = this.getSqlMapClientTemplate().queryForList(
+					"stockAnnouncementDAO.getStockAnnouncementListByPageQuery", query);
+			query.setList(list);
+		}
+		return query;
 	}
 
 }

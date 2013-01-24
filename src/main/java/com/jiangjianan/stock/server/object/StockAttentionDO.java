@@ -29,14 +29,6 @@ public class StockAttentionDO extends BaseDO {
 		this.code = code;
 	}
 
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
 	public Long getUserId() {
 		return userId;
 	}
@@ -59,6 +51,14 @@ public class StockAttentionDO extends BaseDO {
 
 	public void setGmtModified(Date gmtModified) {
 		this.gmtModified = gmtModified;
+	}
+
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }

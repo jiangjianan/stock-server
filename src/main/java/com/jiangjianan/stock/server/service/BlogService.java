@@ -1,12 +1,11 @@
 package com.jiangjianan.stock.server.service;
 
-import java.util.Date;
-import java.util.List;
-
 import com.jiangjianan.stock.server.common.service.Result;
 import com.jiangjianan.stock.server.object.ArticleDO;
 import com.jiangjianan.stock.server.object.BlogDO;
 import com.jiangjianan.stock.server.object.TokenDO;
+import com.jiangjianan.stock.server.query.ArticlePageQuery;
+import com.jiangjianan.stock.server.query.BlogPageQuery;
 
 public interface BlogService {
 	public Result<TokenDO> relogin(String code);
@@ -22,14 +21,12 @@ public interface BlogService {
 
 	public Result<Boolean> setAccessToken(String accessToken);
 
-	public Result<List<BlogDO>> getBlogList();
+	public Result<BlogPageQuery> getBlogList(BlogPageQuery query);
 
 	public Result<BlogDO> getBlogById(String blogUid);
 
 	public Result<ArticleDO> getArticleById(String articleId);
 
-	public Result<List<ArticleDO>> getArticleListByBlogUid(String blogUid);
-
-	public Result<List<ArticleDO>> getRecentArticleList(Date startDate);
-
+	public Result<ArticlePageQuery> getArticleList(
+			ArticlePageQuery query);
 }

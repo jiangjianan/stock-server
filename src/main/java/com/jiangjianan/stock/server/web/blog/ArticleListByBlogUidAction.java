@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.jiangjianan.stock.server.common.service.Result;
 import com.jiangjianan.stock.server.object.ArticleDO;
+import com.jiangjianan.stock.server.query.ArticlePageQuery;
 import com.jiangjianan.stock.server.service.BlogService;
 import com.opensymphony.xwork2.ActionSupport;
 
@@ -19,12 +20,23 @@ public class ArticleListByBlogUidAction extends ActionSupport {
 
 	private List<ArticleDO> articleList;
 	private String blogUid;
+	private int page;
+	private int pageCount;
+	private int count;
 
 	public String execute() throws Exception {
-		Result<List<ArticleDO>> result = blogService
-				.getArticleListByBlogUid(blogUid);
+		if (page == 0) {
+			page = 1;
+		}
+		ArticlePageQuery query = new ArticlePageQuery();
+		query.setPage(page);
+		query.setBlogUid(blogUid);
+		Result<ArticlePageQuery> result = blogService.getArticleList(query);
 		if (result.isSuccess()) {
-			articleList = result.getDefaultModel();
+			query = result.getDefaultModel();
+			articleList = query.getList();
+			count = query.getCount();
+			pageCount = query.getPageCount();
 		}
 		return SUCCESS;
 	}
@@ -51,6 +63,30 @@ public class ArticleListByBlogUidAction extends ActionSupport {
 
 	public void setBlogUid(String blogUid) {
 		this.blogUid = blogUid;
+	}
+
+	public int getPage() {
+		return page;
+	}
+
+	public void setPage(int page) {
+		this.page = page;
+	}
+
+	public int getPageCount() {
+		return pageCount;
+	}
+
+	public void setPageCount(int pageCount) {
+		this.pageCount = pageCount;
+	}
+
+	public int getCount() {
+		return count;
+	}
+
+	public void setCount(int count) {
+		this.count = count;
 	}
 
 }

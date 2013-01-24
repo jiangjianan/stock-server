@@ -149,12 +149,28 @@ public class StockPriceDO extends BaseDO {
 	public void setMarketValue(Double marketValue) {
 		this.marketValue = marketValue;
 	}
-	
+
 	public String getDateString() {
 		long year = date / 10000;
 		long month = date % 10000 / 100;
 		long day = date % 100;
 		return year + "-" + month + "-" + day;
+	}
+
+	public String getTotalValueString() {
+		return exchange(totalValue);
+	}
+	
+	public String getAmountString() {
+		return exchange(amount);
+	}
+	
+	public String exchange(Double origin) {
+		if (origin == null) {
+			return null;
+		}
+		double value = origin / 100000000L;
+		return String.format("%.2f", value);
 	}
 
 }

@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8"%>
-<%@ taglib prefix="s" uri="/struts-tags"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,22 +7,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="/css/bootstrap-responsive.min.css" rel="stylesheet" media="screen">
 <link href="/css/bootstrap.min.css" rel="stylesheet" media="screen">
-<title><s:property value="articleDO.articleTitle" /></title>
+<script src="/js/jquery-1.9.0.min.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<title>最近一周价值投资博文列表</title>
 </head>
 <body>
 	<div class="container">
-		<div class="navbar">
-			<div class="navbar-inner">
-				<a class="brand" href="/index.action">价值投资</a>
-				<ul class="nav">
-					<li><a href="/info/stock-info-list.action">股票列表</a></li>
-					<li class="divider-vertical"></li>
-					<li><a href="/announcement/recent-stock-announcement-list.action" target="_blank">公司公告</a></li>
-					<li class="divider-vertical"></li>
-					<li class="active"><a href="/blog/blog-list.action">博客列表</a></li>
-				</ul>
-			</div>
-		</div>
+		<jsp:include page="../module/nav.jsp" flush="true">
+			<jsp:param name="index" value="3" />
+		</jsp:include>
+
+		<jsp:include page="../module/page_changer.jsp" flush="true">
+			<jsp:param name="currentPage" value="${requestScope.page}" />
+			<jsp:param name="pageCount" value="${requestScope.pageCount}" />
+			<jsp:param name="pageUrl" value="recent-article-list.action?page=" />
+		</jsp:include>
+
 		<table class="table table-striped">
 			<thead>
 				<tr>
@@ -32,15 +32,21 @@
 				</tr>
 			</thead>
 			<tbody>
-				<s:iterator value="articleList">
+				<c:forEach var="article" items="${requestScope.articleList}">
 					<tr>
-						<td><s:property value="userNick" /></td>
-						<td><a href="http://blog.sina.com.cn/s/blog_<s:property value="articleId" />.html" target="_blank"><s:property value="articleTitle" /></a></td>
-						<td><s:property value="articlePubdate" /></td>
+						<td>${article.userNick}</td>
+						<td><a href="http://blog.sina.com.cn/s/blog_${article.articleId}.html" target="_blank">${article.articleTitle}</a></td>
+						<td>${article.articlePubdateString}</td>
 					</tr>
-				</s:iterator>
+				</c:forEach>
 			</tbody>
 		</table>
+
+		<jsp:include page="../module/page_changer.jsp" flush="true">
+			<jsp:param name="currentPage" value="${requestScope.page}" />
+			<jsp:param name="pageCount" value="${requestScope.pageCount}" />
+			<jsp:param name="pageUrl" value="recent-article-list.action?page=" />
+		</jsp:include>
 	</div>
 </body>
 </html>

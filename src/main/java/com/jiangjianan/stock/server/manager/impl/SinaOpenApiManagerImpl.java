@@ -77,7 +77,6 @@ public class SinaOpenApiManagerImpl extends BaseManager implements
 		try {
 			Thread.sleep(1000);
 			String json = HttpUtil.get(url, CHARSET_GBK);
-			System.out.println(json);
 			BlogDO blogDO = JsonUtil.getBlog(json);
 			return blogDO;
 		} catch (Exception e) {

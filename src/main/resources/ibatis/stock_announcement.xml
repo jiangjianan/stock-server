@@ -4,6 +4,8 @@
 <sqlMap namespace="stockAnnouncementDAO">
 	<typeAlias alias="StockAnnouncementDO"
 		type="com.jiangjianan.stock.server.object.StockAnnouncementDO" />
+	<typeAlias alias="StockAnnouncementPageQuery"
+		type="com.jiangjianan.stock.server.query.StockAnnouncementPageQuery" />
 
 	<resultMap id="StockAnnouncementResult" class="StockAnnouncementDO">
 		<result property="id" column="id" />
@@ -69,5 +71,34 @@
 		FROM stock_announcement
 		WHERE date>=#value#
 		ORDER BY date DESC, code ASC
+	</select>
+	
+	<select id="getStockAnnouncementListByPageQueryCount" parameterClass="StockAnnouncementPageQuery"
+		resultClass="int">
+		SELECT count(*)
+		FROM stock_announcement
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="code">
+				code=#code#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="startDate">
+				date>=#startDate#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+
+	<select id="getStockAnnouncementListByPageQuery" parameterClass="StockAnnouncementPageQuery" resultMap="StockAnnouncementResult">
+		SELECT <include refid="stockAnnouncement.column.all" /> 
+		FROM stock_announcement
+		<dynamic prepend="WHERE">
+			<isNotEmpty prepend="AND" property="code">
+				code=#code#
+			</isNotEmpty>
+			<isNotEmpty prepend="AND" property="startDate">
+				date>=#startDate#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY date DESC, code ASC
+		LIMIT #start#, #pageSize#
 	</select>
 </sqlMap>
